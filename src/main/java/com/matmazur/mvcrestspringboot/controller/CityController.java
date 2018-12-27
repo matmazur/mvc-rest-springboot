@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CityController {
 
-    @RequestMapping("/city")
+    @RequestMapping(value = "/city")
     public City getCity() {
         return City.builder()
                 .withName("Gdansk")
