@@ -43,7 +43,7 @@ public class City {
             return this;
         }
 
-        public Builder withName(long population) {
+        public Builder withPopulation(long population) {
             this.population = population;
             return this;
         }
