@@ -10,5 +10,6 @@ public class MvcRestSpringbootApplication {
         SpringApplication.run(MvcRestSpringbootApplication.class, args);
     }
 
+    public static int REG = 1;
 }
 
