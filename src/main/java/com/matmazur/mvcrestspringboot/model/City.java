@@ -2,13 +2,11 @@ package com.matmazur.mvcrestspringboot.model;
 
 import com.matmazur.mvcrestspringboot.MvcRestSpringbootApplication;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class City {
 
-    @XmlAttribute
     private int id;
     private String name;
     private long population;
@@ -25,6 +23,14 @@ public class City {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
