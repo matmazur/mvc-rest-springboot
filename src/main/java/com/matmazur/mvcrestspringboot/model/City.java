@@ -1,12 +1,18 @@
 package com.matmazur.mvcrestspringboot.model;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement
 public class City {
 
+    @XmlAttribute
+    private int id;
     private String name;
     private long population;
+    private List<City> tracks = new ArrayList<>();
 
     public City(String name, long population) {
         this.name = name;
