@@ -3,10 +3,8 @@ package com.matmazur.mvcrestspringboot.controller;
 import com.matmazur.mvcrestspringboot.model.CityWrapper;
 import com.matmazur.mvcrestspringboot.model.City;
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -48,7 +46,7 @@ public class CityController {
         cities.add(new City("Krakow", 400_000));
     }
 
-    @RequestMapping
+    @GetMapping
     public CityWrapper getCities(@RequestParam(required = false) Integer page, @RequestParam(required = false) String order) {
 
         if (order != null) {
@@ -73,18 +71,16 @@ public class CityController {
         return cityWrapper;
     }
 
-    @RequestMapping(value = "/{id}")
+    @GetMapping(value = "/{id}")
     public City getCity(@PathVariable int id) {
 
         return cities.stream().filter(x -> x.getId() == id).findAny().orElse(null);
     }
 
-    @PostConstruct
-    public void starter(){
-        System.out.println("start");
-    }
-    @PreDestroy
-    public void destr(){
-        System.out.println("destroy");
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void addCity(@RequestBody City city) {
+
+        City cityCorrect = new City(city.getName(),city.getPopulation());
+        cities.add(cityCorrect);
     }
 }
