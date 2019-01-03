@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -67,7 +68,6 @@ public class CityController {
             cityWrapper.setCities(pagedListHolder.getPageList());
             return ResponseEntity.ok(cityWrapper);
         }
-
         cityWrapper.setCities(cities);
         return ResponseEntity.ok(cityWrapper);
     }
@@ -96,6 +96,12 @@ public class CityController {
         }
 
         cities.add(cityCorrect);
-        return ResponseEntity.created(URI.create("/cities")).build();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(cities.size() - 1)
+                .toUri();
+
+        return ResponseEntity.created(location).body(cityCorrect);
     }
 }
