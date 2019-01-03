@@ -3,11 +3,10 @@ package com.matmazur.mvcrestspringboot.controller;
 import com.matmazur.mvcrestspringboot.model.CityWrapper;
 import com.matmazur.mvcrestspringboot.model.City;
 import org.springframework.beans.support.PagedListHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -47,6 +46,7 @@ public class CityController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     public CityWrapper getCities(@RequestParam(required = false) Integer page, @RequestParam(required = false) String order) {
 
         if (order != null) {
@@ -72,15 +72,17 @@ public class CityController {
     }
 
     @GetMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public City getCity(@PathVariable int id) {
 
         return cities.stream().filter(x -> x.getId() == id).findAny().orElse(null);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
     public void addCity(@RequestBody City city) {
 
-        City cityCorrect = new City(city.getName(),city.getPopulation());
+        City cityCorrect = new City(city.getName(), city.getPopulation());
         cities.add(cityCorrect);
     }
 }
