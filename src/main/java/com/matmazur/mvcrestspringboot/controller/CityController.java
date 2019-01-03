@@ -5,8 +5,10 @@ import com.matmazur.mvcrestspringboot.model.City;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -46,8 +48,7 @@ public class CityController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    public CityWrapper getCities(@RequestParam(required = false) Integer page, @RequestParam(required = false) String order) {
+    public ResponseEntity<CityWrapper> getCities(@RequestParam(required = false) Integer page, @RequestParam(required = false) String order) {
 
         if (order != null) {
             if (order.equals("asc")) {
@@ -64,25 +65,37 @@ public class CityController {
             pagedListHolder.setPageSize(pageSize);
             pagedListHolder.setPage(page);
             cityWrapper.setCities(pagedListHolder.getPageList());
-            return cityWrapper;
+            return ResponseEntity.ok(cityWrapper);
         }
 
         cityWrapper.setCities(cities);
-        return cityWrapper;
+        return ResponseEntity.ok(cityWrapper);
     }
 
     @GetMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public City getCity(@PathVariable int id) {
+    public ResponseEntity<City> getCity(@PathVariable int id) {
 
-        return cities.stream().filter(x -> x.getId() == id).findAny().orElse(null);
+        City city = cities.stream().filter(x -> x.getId() == id).findAny().orElse(null);
+        if (city != null) {
+            return ResponseEntity.ok(city);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public void addCity(@RequestBody City city) {
+    public ResponseEntity addCity(@RequestBody City city) {
+
+        if (city.getName().isEmpty() || city.getPopulation() == null) {
+            return ResponseEntity.badRequest().build();
+        }
 
         City cityCorrect = new City(city.getName(), city.getPopulation());
+
+        if (cities.stream().filter((x -> x.getName().equals(cityCorrect.getName()))).findAny().orElse(null) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
         cities.add(cityCorrect);
+        return ResponseEntity.created(URI.create("/cities")).build();
     }
 }

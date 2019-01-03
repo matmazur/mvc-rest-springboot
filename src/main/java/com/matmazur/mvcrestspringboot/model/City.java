@@ -9,7 +9,7 @@ public class City {
 
     private int id;
     private String name;
-    private long population;
+    private Long population;
 
     public City(String name, long population) {
         this.name = name;
@@ -41,11 +41,11 @@ public class City {
         this.name = name;
     }
 
-    public long getPopulation() {
+    public Long getPopulation() {
         return population;
     }
 
-    public void setPopulation(long population) {
+    public void setPopulation(Long population) {
         this.population = population;
     }
 
